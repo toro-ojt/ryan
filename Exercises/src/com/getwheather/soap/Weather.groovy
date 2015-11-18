@@ -109,65 +109,65 @@ Pressure: ${cw.pressure[it].toString()}
 
 	def static getForecast(zip) {
 		fc = new ForeCast()
-		def weat
+		def weat, p
 		def s_clnt = new SOAPClient('http://wsf.cdyne.com/WeatherWS/Weather.asmx')
 		def res = s_clnt.send(SOAPAction: 'http://ws.cdyne.com/WeatherWS/GetCityForecastByZIP') {
 			body {
 				GetCityForecastByZIP(xmlns:weat= 'http://ws.cdyne.com/WeatherWS/') { ZIP(zip) }
 			}
 		}
-
-		if (res.GetCityForecastByZIPResponse.GetCityForecastByZIPResult.Success == "true") {
-			fc.state = res.GetCityForecastByZIPResponse.GetCityForecastByZIPResult.State
-			fc.city = res.GetCityForecastByZIPResponse.GetCityForecastByZIPResult.City
-			fc.station = res.GetCityForecastByZIPResponse.GetCityForecastByZIPResult.WeatherStationCity
-			fc.id = res.GetCityForecastByZIPResponse.GetCityForecastByZIPResult.ForecastResult.Forecast.WeatherID
-			fc.date = res.GetCityForecastByZIPResponse.GetCityForecastByZIPResult.ForecastResult.Forecast.Date
-			fc.desc = res.GetCityForecastByZIPResponse.GetCityForecastByZIPResult.ForecastResult.Forecast.Desciption
-			fc.temp_high = res.GetCityForecastByZIPResponse.GetCityForecastByZIPResult.ForecastResult.Forecast.Temperatures.DaytimeHigh
-			fc.temp_low = res.GetCityForecastByZIPResponse.GetCityForecastByZIPResult.ForecastResult.Forecast.Temperatures.MorningLow
-			fc.night_time = res.GetCityForecastByZIPResponse.GetCityForecastByZIPResult.ForecastResult.Forecast.ProbabilityOfPrecipiation.Nighttime
-			fc.day_time = res.GetCityForecastByZIPResponse.GetCityForecastByZIPResult.ForecastResult.Forecast.ProbabilityOfPrecipiation.Daytime
+		p = res.GetCityForecastByZIPResponse.GetCityForecastByZIPResult
+		if (p.Success == "true") {
+			fc.state = p.State
+			fc.city = p.City
+			fc.station = p.WeatherStationCity
+			fc.id = p.ForecastResult.Forecast.WeatherID
+			fc.date = p.ForecastResult.Forecast.Date
+			fc.desc = p.ForecastResult.Forecast.Desciption
+			fc.temp_high = p.ForecastResult.Forecast.Temperatures.DaytimeHigh
+			fc.temp_low = p.ForecastResult.Forecast.Temperatures.MorningLow
+			fc.night_time = p.ForecastResult.Forecast.ProbabilityOfPrecipiation.Nighttime
+			fc.day_time = p.ForecastResult.Forecast.ProbabilityOfPrecipiation.Daytime
 		}
 	}
 
 	def static getWeather(zip) {
 		cw = new CityWeather()
-		def weat
+		def weat, p
 		def s_clnt = new SOAPClient('http://wsf.cdyne.com/WeatherWS/Weather.asmx')
 		def res = s_clnt.send(SOAPAction: 'http://ws.cdyne.com/WeatherWS/GetCityWeatherByZIP') {
 			body {
 				GetCityWeatherByZIP(xmlns:weat= 'http://ws.cdyne.com/WeatherWS/') { ZIP(zip) }
 			}
 		}
+		p = res.GetCityWeatherByZIPResponse.GetCityWeatherByZIPResult
+		if (p.Success == "true") {
 
-		if (res.GetCityWeatherByZIPResponse.GetCityWeatherByZIPResult.Success == "true") {
-
-			cw.id = res.GetCityWeatherByZIPResponse.GetCityWeatherByZIPResult.WeatherID
-			cw.state = res.GetCityWeatherByZIPResponse.GetCityWeatherByZIPResult.State
-			cw.city = res.GetCityWeatherByZIPResponse.GetCityWeatherByZIPResult.City
-			cw.station = res.GetCityWeatherByZIPResponse.GetCityWeatherByZIPResult.WeatherStationCity
-			cw.desc = res.GetCityWeatherByZIPResponse.GetCityWeatherByZIPResult.Description
-			cw.temp = res.GetCityWeatherByZIPResponse.GetCityWeatherByZIPResult.Temperature
-			cw.rel_humid = res.GetCityWeatherByZIPResponse.GetCityWeatherByZIPResult.RelativeHumidity
-			cw.wind = res.GetCityWeatherByZIPResponse.GetCityWeatherByZIPResult.Wind
-			cw.pressure = res.GetCityWeatherByZIPResponse.GetCityWeatherByZIPResult.Pressure
+			cw.id = p.WeatherID
+			cw.state = p.State
+			cw.city = p.City
+			cw.station = p.WeatherStationCity
+			cw.desc = p.Description
+			cw.temp = p.Temperature
+			cw.rel_humid = p.RelativeHumidity
+			cw.wind = p.Wind
+			cw.pressure = p.Pressure
 		}
 	}
 
 	def static getInfo() {
-		def weat
+		def weat, p
 		def s_clnt = new SOAPClient('http://wsf.cdyne.com/WeatherWS/Weather.asmx')
 		def res = s_clnt.send(SOAPAction: 'http://ws.cdyne.com/WeatherWS/GetWeatherInformation') {
 			body {
 				GetWeatherInformation(xmlns:weat= 'http://ws.cdyne.com/WeatherWS/')
 			}
 		}
-
-		if (res.GetWeatherInformationResponse.GetWeatherInformationResult.WeatherDescription.WeatherID) {
-			wi.id = res.GetWeatherInformationResponse.GetWeatherInformationResult.WeatherDescription.WeatherID
-			wi.desc = res.GetWeatherInformationResponse.GetWeatherInformationResult.WeatherDescription.Description
-			wi.pic = res.GetWeatherInformationResponse.GetWeatherInformationResult.WeatherDescription.PictureURL
+		p = res.GetWeatherInformationResponse.GetWeatherInformationResult.WeatherDescription
+		if (p.WeatherID) {
+			wi.id = p.WeatherID
+			wi.desc = p.Description
+			wi.pic = p.PictureURL
 		}
 	}
 }

@@ -157,50 +157,45 @@ YUM-Yugoslav Dinar
 ZMK-Zambian Kwacha
 ZWD-Zimbabwe Dollar"""
 	def rate
+	DecimalFormat df = new DecimalFormat(".##")
 
 	def getCurrencyCode() {
-		println "Different Currency Code and Names around the World"
-		println cd
+		//println "Different Currency Code and Names around the World"
+		return cd
 	}
-	
+
 	def conv(fr_v, fr_c , to) {
-		
 		if (!(cd =~ fr_c) || !(cd =~ to) || fr_c.length() != 3 || to.length() != 3) {
-			println "Please Enter a Valid Currency Code"
-			return
+			return "Please Enter a Valid Currency Code"
 		}
 		if (!(fr_v.isNumber())) {
-			println "Please Enter a Valid Value"
-			return
+			return "Please Enter a Valid Value"
 		} else {
-			DecimalFormat df = new DecimalFormat(".##")
 			getRate(fr_c, to)
 			double rs = rate.toDouble() * Double.parseDouble(fr_v)
-			println "Result: ${fr_v} ${fr_c} is ${df.format(rs)} ${to}"
+			return "Result: ${fr_v} ${fr_c} is ${df.format(rs)} ${to}"
 		}
 	}
-	
+
 	def getRate(frm, to) {
 		String web
 		if (!(cd =~ frm) || !(cd =~ to) || frm.length() != 3 || to.length() != 3) {
-			println "Please Enter a Valid Currency Code ${frm} ${to}"
-			return
+			return "Currency Code not Found"
 		} else {
-			
+
 			def s_client = new SOAPClient('http://www.webservicex.net/CurrencyConvertor.asmx')
 			def res = s_client.send(SOAPAction: 'http://www.webserviceX.NET/ConversionRate') {
 				body {
 					ConversionRate(xmlns:web="http://www.webserviceX.NET/") {
-						
+
 						FromCurrency(frm)
 						ToCurrency(to)
 					}
 				}
 			}
-			
+
 			def p = res.ConversionRateResponse.ConversionRateResult
-			if(p) rate = p; println "Rate: 1 ${frm} is ${rate} ${to}"
+			if(p) rate = p; return "Result: 1 ${frm} is ${df.format(rate.toDouble())} ${to}"
 		}
-		
 	}
 }

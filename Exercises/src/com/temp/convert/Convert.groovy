@@ -1,10 +1,13 @@
 package com.temp.convert
 
+import java.security.interfaces.RSAKey;
+import java.text.DecimalFormat
+
 import wslite.soap.SOAPClient
 
 class Convert {
 	def fahrenheit, celcius
-
+	DecimalFormat df = new DecimalFormat(".##")
 	def celToFar(cel) {
 		String web
 		def s_clnt = new SOAPClient('http://www.w3schools.com/webservices/tempconvert.asmx')
@@ -16,7 +19,8 @@ class Convert {
 		def p = res.CelsiusToFahrenheitResponse.CelsiusToFahrenheitResult
 		if (p)	{
 			fahrenheit = p
-			println "\n${cel} Celcius is: ${fahrenheit} in Fahrenheit\n"
+			//println "\n${cel} Celcius is: ${fahrenheit} in Fahrenheit\n"
+			return df.format(fahrenheit.toDouble())
 		}
 	}
 
@@ -28,10 +32,11 @@ class Convert {
 				FahrenheitToCelsius(xmlns:web='http://www.w3schools.com/webservices/') { Fahrenheit(far) }
 			}
 		}
-		def p = res.FahrenheitToCelsiusResponse.CelsiusToFahrenheitResult
+		def p = res.FahrenheitToCelsiusResponse.FahrenheitToCelsiusResult
 		if (p)	{
 			celcius = p
-			println "\n${far} Fahrenheit is: ${celcius} in Celcius\n"
+			//println "\n${far} Fahrenheit is: ${celcius} in Celcius\n"
+			return df.format(celcius.toDouble())
 		}
 	}
 }
