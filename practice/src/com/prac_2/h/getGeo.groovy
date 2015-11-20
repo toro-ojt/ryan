@@ -1,6 +1,6 @@
 package com.prac_2.h
 
-class getGeo {
+class GetGeo {
 	
 	def void getGeoLoc(country, city = "", province = "") {
 		
